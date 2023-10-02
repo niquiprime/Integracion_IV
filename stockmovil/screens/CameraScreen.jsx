@@ -1,47 +1,53 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { RNCamera } from "react-native-camera";
+import React, { useState, useEffect } from "react";
+import { Text, View, StyleSheet, Button } from "react-native";
+import { BarCodeScanner } from "expo-barcode-scanner";
 
-const CameraComponent = () => {
-  const handleBarCodeRead = (barcodes) => {
-    if (barcodes.length > 0) {
-      console.log("Código de barras leído:", barcodes[0].data);
-      // Aquí puedes realizar acciones adicionales con el código de barras leído
-    }
+function CameraComponent() {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
+
+  useEffect(() => {
+    const getBarCodeScannerPermissions = async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+    };
+
+    getBarCodeScannerPermissions();
+  }, []);
+
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+    console.log(
+      `Bar code with type ${type} and data ${data} has been scanned.`
+    );
+    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
+
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
 
   return (
     <View style={styles.container}>
-      <RNCamera
-        style={styles.preview}
-        onBarCodeRead={handleBarCodeRead}
-        // Puedes configurar otras propiedades de la cámara aquí
-      >
-        <Text style={styles.capture}>Enfoque un código de barras...</Text>
-      </RNCamera>
+      <BarCodeScanner
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        style={StyleSheet.absoluteFillObject}
+      />
+      {scanned && (
+        <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
+      )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: "black",
-  },
-  preview: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
-  capture: {
-    flex: 0,
-    backgroundColor: "#fff",
-    borderRadius: 5,
-    padding: 15,
-    paddingHorizontal: 20,
-    alignSelf: "center",
-    margin: 20,
+    justifyContent: "center",
   },
 });
 
