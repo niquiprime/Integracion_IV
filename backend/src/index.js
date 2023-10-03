@@ -1,25 +1,13 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const cors = require('cors');
 
 require('dotenv').config();
 
 const app = express();
 
-// aqui se conecta la bd con el backend
-mongoose.connect(process.env.MONGO_CLUSTER, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-// esto es para verificar que se conecta a la bd
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'Error de conexión a MongoDB:'));
-db.once('open', () => {
-  console.log('Conectado a la base de datos MongoDB');
-});
+require('./DB/db');
 
 // Define las rutas y todo lo otro aca
-
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`El servidor está escuchando en el puerto ${port}`);
@@ -28,10 +16,6 @@ app.listen(port, () => {
 
 
 //Routes
-app.get('/', (req, res) => {
-  res.send('Hola mundo');
-});
-
-app.get('/api', (req, res) => {
-  res.send('Hola mundo desde la API');
-});
+app.use('/api', require('./Routes/routes'));
+app.use(cors());
+app.use(express.json());
