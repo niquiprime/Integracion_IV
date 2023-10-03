@@ -24,3 +24,14 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`El servidor está escuchando en el puerto ${port}`);
 });
+
+
+
+//Routes
+app.get('/', (req, res) => {
+  res.send('Hola mundo');
+});
+
+app.get('/api', (req, res) => {
+  res.send('Hola mundo desde la API');
+});
