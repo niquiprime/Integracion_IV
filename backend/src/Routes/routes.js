@@ -13,8 +13,13 @@ router.get('/productos/todos', async(req, res) => {
 });
 
 // un producto en especifico
-router.get('/productos/:id', (req, res) => {
-    res.send('Hola mundo, soy la ruta GET /productos/:id');
+router.get('/productos/:id', async(req, res) => {
+    try {
+        const product = await Productos.findById(req.params.id);
+        res.json(product);
+    } catch (error) {
+        res.json({message: error});
+    }
 });
 
 // get usuario en especifico
