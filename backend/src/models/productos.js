@@ -8,7 +8,11 @@ const productSchema = new Schema({
     Precio: {
         type: Number,
         required: true,
-    }
+    },
+    CodigoBarras: {
+        type: Number,
+        required: true,
+    },
 }, {
     timestamps: true,
 });
