@@ -27,4 +27,15 @@ router.get('/usuarios/:id', (req, res) => {
     res.send('Hola mundo, soy la ruta GET /usuarios/:id');
 });
 
+// Enviando un serial de codigo de barras, devolver el producto
+router.get('/productos/codigo/:codigo', async(req, res) => {
+    try {
+        const product = await Productos.findOne({codigo: req.params.codigo});
+        res.json(product);
+    } catch (error) {
+        res.json({message: error});
+    }
+});
+
+
 module.exports = router;
