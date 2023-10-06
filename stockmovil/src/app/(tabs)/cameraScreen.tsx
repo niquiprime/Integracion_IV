@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
-import ModalScanndData from "../src/components/ModalScannData"; // Importa tu componente modal
-import FlashButton from "../src/components/FlashButton"; // Importa tu componente de botón de flash
+import ModalScanndData from "../../components/ModalScannData"; // Importa tu componente modal
+import FlashButton from "../../components/FlashButton"; // Importa tu componente de botón de flash
 
 function CameraComponent() {
   const [hasPermission, setHasPermission] = useState(null);
