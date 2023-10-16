@@ -1,39 +1,17 @@
 {
   "expo": {
-    "name": "stockmovil",
-    "scheme": "stockmovil",
-    "slug": "stockmovil",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "scheme": "tamagui-app",
+    "plugins": [
+        "expo-barcode-scanner"
+    ],
     "userInterfaceStyle": "automatic",
     "splash": {
+      "backgroundColor": "#ddffe2",
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "contain"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.stockmovil.stockmovil",
-      "versionCode": 1
-    },
-    "web": {
-      "favicon": "./assets/favicon.png",
-      "bundler": "metro"
-    },
-    "plugins": [
-      "expo-router",
-      "expo-camera",
-      "expo-barcode-scanner"
-    ]
+    "icon": "./assets/icon.png",
+    "name": "StockMovil",
+    "slug": "StockMovil"
   }
 }

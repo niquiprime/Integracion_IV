@@ -32,7 +32,7 @@ export default function Layout() {
 
   return (
     <TamaguiProvider config={config}>
-      <Suspense fallback={<Text>Loading...</Text>}>
+      <Suspense fallback={<Text>Cargando...</Text>}>
         <Theme name={colorScheme}>
           <ThemeProvider
             value={colorScheme === "light" ? DefaultTheme : DarkTheme}
