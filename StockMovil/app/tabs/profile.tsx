@@ -46,7 +46,6 @@ const UserProfileCard = () => {
           <Text
             fontSize="$3"
             fontWeight="bold"
-            color="textSecondary"
           >
             Facebook
           </Text>
@@ -59,7 +58,6 @@ const UserProfileCard = () => {
           <Text
             fontSize="$3"
             fontWeight="bold"
-            color="textSecondary"
           >
             Twitter
           </Text>
@@ -72,7 +70,6 @@ const UserProfileCard = () => {
           <Text
             fontSize="$3"
             fontWeight="bold"
-            color="textSecondary"
           >
             Instagram
           </Text>
@@ -85,7 +82,6 @@ const UserProfileCard = () => {
           <Text
             fontSize="$3"
             fontWeight="bold"
-            color="textSecondary"
           >
             LinkedIn
           </Text>
@@ -97,24 +93,9 @@ const UserProfileCard = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Text
-          fontSize="$3"
-          color="textSecondary"
-        >
-          Correo electrónico: usuario@email.com
-        </Text>
-        <Text
-          fontSize="$3"
-          color="textSecondary"
-        >
-          Teléfono: (123) 456-7890
-        </Text>
-        <Text
-          fontSize="$3"
-          color="textSecondary"
-        >
-          Dirección: 123 Street, City
-        </Text>
+        <Text fontSize="$3">Correo electrónico: usuario@email.com</Text>
+        <Text fontSize="$3">Teléfono: (123) 456-7890</Text>
+        <Text fontSize="$3">Dirección: 123 Street, City</Text>
       </View>
     </YStack>
   );

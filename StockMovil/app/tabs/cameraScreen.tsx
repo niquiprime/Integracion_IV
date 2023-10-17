@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { X } from "@tamagui/lucide-icons";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { useFocusEffect } from "expo-router";
 import {
   Adapt,
   Button,
@@ -14,37 +15,71 @@ import {
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState<null | boolean>(null);
-  const [scanned, setScanned] = useState(false);
   const [open, setOpen] = useState(false);
-  const [type, setType] = useState<string | null>(null);
-  const [data, setData] = useState<string | null>(null);
+  const [nombre, setNombre] = useState<string | null>(null);
+  const [shouldScan, setShouldScan] = useState(false);
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === "granted");
     };
-
+    setShouldScan(false);
+    console.log("useEffect scan : " + shouldScan);
     getBarCodeScannerPermissions();
   }, []);
 
+  useFocusEffect(() => {
+    const getBarCodeScannerPermissions = async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+    };
+    console.log("useFocusEffect scan : " + shouldScan);
+    getBarCodeScannerPermissions();
+
+    return () => {
+      console.log("useFocusEffect return");
+    };
+  });
+
   const handleBarCodeScanned = ({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type,
     data
   }: {
     type: string;
     data: string;
   }) => {
-    // con fetch obtener el producto enviando el data endpoint => https://stockmovil-back.onrender.com/api/productos/:id GET
-    // si el producto existe, abrir el modal con los datos del producto
-    setScanned(true);
-    setType(type);
-    setData(data);
-    setOpen(true);
+    console.log("shouldScan: ", shouldScan);
+    if (shouldScan) {
+      fetch(`https://stockmovil-back.onrender.com/api/productos/codigo/${data}`)
+        .then((response) => response.json())
+        .then((product) => {
+          console.log(product);
+          if (product) {
+            setNombre(product.Nombre);
+            setOpen(true);
+          } else {
+            alert("Producto no encontrado");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("Error al obtener el producto");
+        });
+      // Desactiva el escaneo para evitar escaneos múltiples
+      setShouldScan(false);
+    }
+  };
+
+  const startScanning = () => {
+    console.log("1: " + shouldScan);
+    // Activa el escaneo
+    setShouldScan(true);
   };
 
   if (hasPermission === null) {
-    return <Text>Pidiendo permisos para usar la camara...</Text>;
+    return <Text>Pidiendo permisos para usar la cámara...</Text>;
   }
   if (hasPermission === false) {
     return <Text>No diste acceso</Text>;
@@ -62,12 +97,16 @@ export default function App() {
           open={open}
           onOpenChange={(isOpen) => {
             if (!isOpen) {
-              setScanned(false);
               setOpen(false);
             }
           }}
         >
-          <Dialog.Trigger asChild></Dialog.Trigger>
+          <Dialog.Trigger asChild>
+            <BarCodeScanner
+              onBarCodeScanned={handleBarCodeScanned}
+              style={{ flex: 1, width: "100%" }}
+            />
+          </Dialog.Trigger>
           <Adapt
             when="sm"
             platform="touch"
@@ -113,9 +152,12 @@ export default function App() {
               exitStyle={{ x: 0, y: 100, opacity: 0 }}
               gap="$4"
             >
-              <Dialog.Title>Modal Test</Dialog.Title>
+              <Dialog.Title>{nombre}</Dialog.Title>
               <Dialog.Description>
-                Data = {data} y Tipo = {type}
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem
+                facilis consequatur aliquid, ex earum consectetur necessitatibus
+                eaque enim laboriosam esse nobis amet maxime voluptates.
+                Debitis, molestias? Consectetur cupiditate enim earum.
               </Dialog.Description>
               <Unspaced>
                 <Dialog.Close asChild>
@@ -131,12 +173,16 @@ export default function App() {
               </Unspaced>
             </Dialog.Content>
           </Dialog.Portal>
+          <Button
+            alignSelf="center"
+            themeInverse
+            onPress={startScanning}
+            size="$6"
+            margin="$4"
+          >
+            Escanear
+          </Button>
         </Dialog>
-
-        <BarCodeScanner
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-          style={{ flex: 1, width: "100%" }}
-        />
       </YStack>
     </PortalProvider>
   );
