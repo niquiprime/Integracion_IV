@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { X } from "@tamagui/lucide-icons";
+import Axios from "axios";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useFocusEffect } from "expo-router";
 import {
@@ -42,7 +43,7 @@ export default function App() {
     };
   });
 
-  const handleBarCodeScanned = ({
+  const handleBarCodeScanned = async ({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type,
     data
@@ -52,21 +53,24 @@ export default function App() {
   }) => {
     console.log("shouldScan: ", shouldScan);
     if (shouldScan) {
-      fetch(`https://stockmovil-back.onrender.com/api/productos/codigo/${data}`)
-        .then((response) => response.json())
-        .then((product) => {
-          console.log(product);
-          if (product) {
-            setNombre(product.Nombre);
-            setOpen(true);
-          } else {
-            alert("Producto no encontrado");
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          alert("Error al obtener el producto");
-        });
+      try {
+        const response = await Axios.get(
+          `https://stockmovil-back.onrender.com/api/productos/codigo/${data}`
+        );
+        const product = response.data;
+        console.log(product);
+
+        if (product) {
+          setNombre(product.Nombre);
+          setOpen(true);
+        } else {
+          alert("Producto no encontrado");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Error al obtener el producto");
+      }
+
       // Desactiva el escaneo para evitar escaneos múltiples
       setShouldScan(false);
     }

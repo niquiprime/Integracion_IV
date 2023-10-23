@@ -2,21 +2,12 @@ const express = require('express');
 const router = express.Router();
 // importar modelo de productos
 const Productos = require('../models/productos');
+const eusuarios = require('../models/eusuarios');
 
 router.get('/productos/todos', async(req, res) => {
     try {
         const products = await Productos.find();
         res.json(products);
-    } catch (error) {
-        res.json({message: error});
-    }
-});
-
-// un producto en especifico
-router.get('/productos/:id', async(req, res) => {
-    try {
-        const product = await Productos.findById(req.params.id);
-        res.json(product);
     } catch (error) {
         res.json({message: error});
     }
@@ -42,7 +33,12 @@ router.post('/productos/nuevo', async(req, res) => {
 
 // get usuario en especifico
 router.get('/usuarios/:id', (req, res) => {
-    res.send('Hola mundo, soy la ruta GET /usuarios/:id');
+    try {
+        const user = eusuarios.findOne({n_documento: req.params.n_documento});
+        res.json(user);
+    } catch (error) {
+        res.json({message: error});
+    }
 });
 
 router.get('/productos/codigo/:CodigoBarras', async(req, res) => {
