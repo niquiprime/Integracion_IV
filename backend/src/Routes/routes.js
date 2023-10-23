@@ -32,7 +32,7 @@ router.post('/productos/nuevo', async(req, res) => {
 
 
 // get usuario en especifico
-router.get('/usuarios/:id', (req, res) => {
+router.get('/usuarios/rut/:n_documento', (req, res) => {
     try {
         const usuarios = Usuarios.findOne({n_documento: req.params.n_documento});
         res.json(usuarios);
