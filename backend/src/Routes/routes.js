@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 // importar modelo de productos
 const Productos = require('../models/productos');
-const eusuarios = require('../models/eusuarios');
+const usuarios = require('../models/usuarios');
 
 router.get('/productos/todos', async(req, res) => {
     try {
@@ -34,8 +34,8 @@ router.post('/productos/nuevo', async(req, res) => {
 // get usuario en especifico
 router.get('/usuarios/:id', (req, res) => {
     try {
-        const user = eusuarios.findOne({n_documento: req.params.n_documento});
-        res.json(user);
+        const usuarios = usuarios.findOne({n_documento: req.params.n_documento});
+        res.json(usuarios);
     } catch (error) {
         res.json({message: error});
     }
@@ -44,8 +44,8 @@ router.get('/usuarios/:id', (req, res) => {
 //get todos los usuarios
 router.get('/usuarios/todos', async(req, res) => {
     try {
-        const users = await eusuarios.find();
-        res.json(users);
+        const usuarios = await usuarios.find();
+        res.json(usuarios);
     } catch (error) {
         res.json({message: error});
     }
