@@ -41,6 +41,16 @@ router.get('/usuarios/:id', (req, res) => {
     }
 });
 
+//get todos los usuarios
+router.get('/usuarios/todos', async(req, res) => {
+    try {
+        const users = await eusuarios.find();
+        res.json(users);
+    } catch (error) {
+        res.json({message: error});
+    }
+});
+
 router.get('/productos/codigo/:CodigoBarras', async(req, res) => {
     try {
         const product = await Productos.findOne({CodigoBarras: req.params.CodigoBarras});
