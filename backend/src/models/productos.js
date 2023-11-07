@@ -5,8 +5,24 @@ const productSchema = new Schema({
         type: String,
         required: true,
     },
+    Cantidad: {
+        type: Number,
+        required: true,
+    },
     Precio: {
         type: Number,
+        required: true,
+    },
+    Oferta: {
+        type: Number,
+        required: true,
+    },
+    PrecioF: {
+        type: Number,
+        required: true,
+    },
+    Tipo_Producto: {
+        type: String,
         required: true,
     },
     CodigoBarras: {

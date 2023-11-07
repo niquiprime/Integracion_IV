@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { Card, H3, Input, Separator, Text, View, YStack } from "tamagui";
+import { ChevronDown } from "@tamagui/lucide-icons";
+import {
+  Accordion,
+  Paragraph,
+  Input,
+  Square,
+  Text,
+  View,
+  H3,
+  YStack
+} from "tamagui";
 
 interface Product {
   Nombre: string;
   Precio: number;
+  PrecioF: number;
+  Oferta: number;
+  Cantidad: number;
+  Tipo_producto: string;
 }
 
 const SearchProduct: React.FC = () => {
@@ -51,15 +65,62 @@ const SearchProduct: React.FC = () => {
       ) : (
         <View>
           {filteredProducts.map((product, index) => (
-            <Card
+            <Accordion
+              overflow="hidden"
+              width="100%"
+              type="multiple"
               key={index}
-              backgroundColor="$background"
-              marginBottom="$4"
             >
-              <H3>{product.Nombre}</H3>
-              <Separator />
-              <Text>Precio: ${product.Precio}</Text>
-            </Card>
+              <Accordion.Item value="a1">
+                <Accordion.Trigger
+                  flexDirection="row"
+                  justifyContent="space-between"
+                >
+                  {({ open }) => (
+                    <>
+                      <Paragraph>
+                        {" "}
+                        <H3>{product.Nombre}</H3>{" "}
+                      </Paragraph>
+                      <Square
+                        animation="quick"
+                        rotate={open ? "180deg" : "0deg"}
+                      >
+                        <ChevronDown size="$1" />
+                      </Square>
+                    </>
+                  )}
+                </Accordion.Trigger>
+                <Accordion.Content
+                  padding="$3"
+                  borderRadius="$3"
+                  style={{
+                    border: "1px solid #ccc", // Agrega un borde
+                    boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)", // Agrega una sombra
+                    margin: "10px 0", // Espaciado entre elementos
+                    padding: "10px" // Espaciado interno
+                  }}
+                >
+                  <Paragraph
+                    style={{ fontWeight: "bold", marginBottom: "5px" }}
+                  >
+                    Cantidad: {product.Cantidad}
+                  </Paragraph>
+                  <Paragraph style={{ marginBottom: "5px" }}>
+                    Oferta: {product.Oferta}%
+                  </Paragraph>
+                  <Paragraph style={{ marginBottom: "5px" }}>
+                    Precio: ${product.Precio}
+                  </Paragraph>
+                  <Paragraph style={{ marginBottom: "5px" }}>
+                    Precio Final: ${product.PrecioF}
+                  </Paragraph>
+                  <Paragraph style={{ marginBottom: "5px" }}>
+                    Tipo de Producto: {product.Tipo_producto}
+                  </Paragraph>
+                </Accordion.Content>
+              </Accordion.Item>
+            </Accordion>
           ))}
         </View>
       )}
