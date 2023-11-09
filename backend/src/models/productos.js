@@ -1,6 +1,10 @@
 const {Schema, model} = require ('mongoose');
 
 const productSchema = new Schema({
+    CodigoBarras: {
+        type: Number,
+        required: true,
+    },
     Nombre: {
         type: String,
         required: true,
@@ -21,14 +25,11 @@ const productSchema = new Schema({
         type: Number,
         required: true,
     },
-    Tipo_Producto: {
+    Tipo_producto: {
         type: String,
         required: true,
     },
-    CodigoBarras: {
-        type: Number,
-        required: true,
-    },
+    
 }, {
     timestamps: true,
 });

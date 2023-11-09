@@ -1,6 +1,6 @@
 import { ArrowBigRight } from "@tamagui/lucide-icons";
 import { useRouter } from "expo-router";
-import { Button, H1, YStack } from "tamagui";
+import { Button, H1, YStack, SizableText, Image } from "tamagui";
 
 import { MyStack } from "../components/MyStack";
 
@@ -12,12 +12,44 @@ export default function Home() {
       <YStack
         space="$4"
         maxWidth={600}
+        alignSelf="center"
       >
-        <H1 textAlign="center">StockMovil.</H1>
+        <H1
+          textAlign="center"
+          marginTop={100}
+        >
+          Bienvenido a StockMovil
+        </H1>
+        <SizableText
+          theme="alt2"
+          size="$4"
+        >
+          Administre su inventario de manera fácil y rápida
+        </SizableText>
       </YStack>
-      <YStack space="$2.5">
+      <YStack
+        space="$2.5"
+        alignItems="center"
+      >
+        <Image
+          source={{
+            uri: "https://cdn-icons-png.flaticon.com/512/2897/2897818.png",
+            width: 175,
+            height: 175
+          }}
+        />
+      </YStack>
+      <YStack
+        space="$2.5"
+        alignItems="center"
+      >
         <Button
+          theme="active"
           iconAfter={ArrowBigRight}
+          marginBottom={100}
+          //responsive
+          width={200}
+          height={50}
           onPress={() => router.push("/login/login")}
         >
           Vamos!

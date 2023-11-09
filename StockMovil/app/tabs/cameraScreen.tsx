@@ -2,22 +2,31 @@ import React, { useEffect, useState } from "react";
 import { X } from "@tamagui/lucide-icons";
 import Axios from "axios";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { useFocusEffect } from "expo-router";
 import {
   Adapt,
   Button,
   Dialog,
   PortalProvider,
   Sheet,
+  Spinner,
   Text,
   Unspaced,
+  YGroup,
   YStack
 } from "tamagui";
-
 export default function App() {
+  interface Product {
+    Nombre: string;
+    Precio: number;
+    PrecioF: number;
+    Oferta: number;
+    Cantidad: number;
+    Tipo_producto: string;
+  }
+
   const [hasPermission, setHasPermission] = useState<null | boolean>(null);
   const [open, setOpen] = useState(false);
-  const [nombre, setNombre] = useState<string | null>(null);
+  const [products, setProducts] = useState<Product>(null);
   const [shouldScan, setShouldScan] = useState(false);
 
   useEffect(() => {
@@ -25,43 +34,29 @@ export default function App() {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === "granted");
     };
-    setShouldScan(false);
-    console.log("useEffect scan : " + shouldScan);
     getBarCodeScannerPermissions();
   }, []);
 
-  useFocusEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === "granted");
-    };
-    console.log("useFocusEffect scan : " + shouldScan);
-    getBarCodeScannerPermissions();
-
-    return () => {
-      console.log("useFocusEffect return");
-    };
-  });
-
-  const handleBarCodeScanned = async ({
+  async function handleBarCodeScanned2({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type,
     data
   }: {
     type: string;
     data: string;
-  }) => {
+  }) {
     console.log("shouldScan: ", shouldScan);
     if (shouldScan) {
       try {
         const response = await Axios.get(
           `https://stockmovil-back.onrender.com/api/productos/codigo/${data}`
         );
-        const product = response.data;
-        console.log(product);
+        const productData: Product = response.data;
+        console.log(productData);
 
-        if (product) {
-          setNombre(product.Nombre);
+        if (productData) {
+          setProducts(productData);
+          console.log(productData);
           setOpen(true);
         } else {
           alert("Producto no encontrado");
@@ -71,10 +66,9 @@ export default function App() {
         alert("Error al obtener el producto");
       }
 
-      // Desactiva el escaneo para evitar escaneos múltiples
       setShouldScan(false);
     }
-  };
+  }
 
   const startScanning = () => {
     console.log("1: " + shouldScan);
@@ -107,7 +101,9 @@ export default function App() {
         >
           <Dialog.Trigger asChild>
             <BarCodeScanner
-              onBarCodeScanned={handleBarCodeScanned}
+              onBarCodeScanned={
+                startScanning ? handleBarCodeScanned2 : undefined
+              }
               style={{ flex: 1, width: "100%" }}
             />
           </Dialog.Trigger>
@@ -133,7 +129,6 @@ export default function App() {
               />
             </Sheet>
           </Adapt>
-
           <Dialog.Portal>
             <Dialog.Overlay
               animation="lazy"
@@ -156,13 +151,38 @@ export default function App() {
               exitStyle={{ x: 0, y: 100, opacity: 0 }}
               gap="$4"
             >
-              <Dialog.Title>{nombre}</Dialog.Title>
+              <Dialog.Title>{products && products.Nombre}</Dialog.Title>
               <Dialog.Description>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem
-                facilis consequatur aliquid, ex earum consectetur necessitatibus
-                eaque enim laboriosam esse nobis amet maxime voluptates.
-                Debitis, molestias? Consectetur cupiditate enim earum.
+                {products && (
+                  <Text>Este Producto es: {products.Tipo_producto}</Text>
+                )}
               </Dialog.Description>
+              <YGroup>
+                <YGroup.Item>
+                  <Text style={styles.bold}>Precio</Text>
+                  <Text style={styles.paragraph}>
+                    ${products && products.Precio}
+                  </Text>
+                </YGroup.Item>
+                <YGroup.Item>
+                  <Text style={styles.bold}>Oferta</Text>
+                  <Text style={styles.paragraph}>
+                    {products && products.Oferta}%
+                  </Text>
+                </YGroup.Item>
+                <YGroup.Item>
+                  <Text style={styles.bold}>Precio Final</Text>
+                  <Text style={styles.paragraph}>
+                    ${products && products.PrecioF}
+                  </Text>
+                </YGroup.Item>
+                <YGroup.Item>
+                  <Text style={styles.bold}>Cantidad en Bodega</Text>
+                  <Text style={styles.paragraph}>
+                    {products && products.Cantidad}
+                  </Text>
+                </YGroup.Item>
+              </YGroup>
               <Unspaced>
                 <Dialog.Close asChild>
                   <Button
@@ -177,17 +197,38 @@ export default function App() {
               </Unspaced>
             </Dialog.Content>
           </Dialog.Portal>
-          <Button
-            alignSelf="center"
-            themeInverse
-            onPress={startScanning}
-            size="$6"
-            margin="$4"
-          >
-            Escanear
-          </Button>
+
+          {shouldScan ? (
+            <YStack
+              alignSelf="center"
+              margin="$4"
+            >
+              <Spinner size="large" />
+              <Text>Escaneando...</Text>
+            </YStack>
+          ) : (
+            <Button
+              alignSelf="center"
+              themeInverse
+              onPress={startScanning}
+              size="$6"
+              margin="$4"
+            >
+              Escanear
+            </Button>
+          )}
         </Dialog>
       </YStack>
     </PortalProvider>
   );
 }
+
+const styles = {
+  bold: {
+    fontWeight: "bold",
+    marginBottom: "5px"
+  },
+  paragraph: {
+    marginBottom: "10px" // Espacio entre párrafos
+  }
+};

@@ -21,6 +21,11 @@ export default function TabRoutesLayout() {
       />
       <Tabs.Screen
         name="cameraScreen"
+        listeners={{
+          tabPress: (e) => {
+            console.log(e.data);
+          }
+        }}
         options={{
           headerShown: false,
           title: "Escanear",

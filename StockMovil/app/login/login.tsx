@@ -62,7 +62,7 @@ const logintest = () => {
         borderColor="$borderColor"
         padding="$8"
       >
-        <H2>Login</H2>
+        <H2>Ingresa</H2>
         <YStack
           padding="$3"
           minWidth={300}
@@ -107,7 +107,7 @@ const logintest = () => {
           <Text color="red">{errors.password}</Text>
         </YStack>
         <Form.Trigger asChild>
-          <Button>Iniciar sesión</Button>
+          <Button theme="active">Iniciar sesión</Button>
         </Form.Trigger>
       </Form>
     </YStack>

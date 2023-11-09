@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { ChevronDown } from "@tamagui/lucide-icons";
 import {
   Accordion,
-  Paragraph,
+  Button,
+  H2,
+  H3,
   Input,
+  Paragraph,
+  Spinner,
   Square,
   Text,
   View,
-  H3,
   YStack
 } from "tamagui";
 
@@ -26,6 +29,7 @@ const SearchProduct: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchProductData = async () => {
+    setLoading(true);
     try {
       const response = await fetch(
         "https://stockmovil-back.onrender.com/api/productos/todos"
@@ -33,10 +37,10 @@ const SearchProduct: React.FC = () => {
       const data: Product[] = await response.json();
 
       setProducts(data);
-      setLoading(false);
     } catch (error) {
       console.error(error);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -53,6 +57,7 @@ const SearchProduct: React.FC = () => {
       padding="$4"
       paddingTop="$6"
     >
+      <H2 marginBottom="$4">Productos</H2>
       <Input
         placeholder="Buscar producto"
         onChangeText={(text) => setSearchText(text)}
@@ -60,6 +65,15 @@ const SearchProduct: React.FC = () => {
         marginBottom="$4"
         padding="$2"
       />
+      <Button
+        onPress={fetchProductData}
+        alignSelf="flex-end"
+        iconAfter={loading ? <Spinner /> : null}
+        size="$4"
+        chromeless
+      >
+        Recargar Datos
+      </Button>
       {loading ? (
         <Text>Cargando datos...</Text>
       ) : (
@@ -101,9 +115,7 @@ const SearchProduct: React.FC = () => {
                     padding: "10px" // Espaciado interno
                   }}
                 >
-                  <Paragraph
-                    style={{ fontWeight: "bold", marginBottom: "5px" }}
-                  >
+                  <Paragraph style={{ marginBottom: "5px" }}>
                     Cantidad: {product.Cantidad}
                   </Paragraph>
                   <Paragraph style={{ marginBottom: "5px" }}>
