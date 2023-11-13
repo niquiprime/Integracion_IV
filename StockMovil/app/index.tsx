@@ -1,6 +1,7 @@
 import { ArrowBigRight } from "@tamagui/lucide-icons";
 import { useRouter } from "expo-router";
-import { Button, H1, YStack, SizableText, Image } from "tamagui";
+import * as SecureStore from "expo-secure-store";
+import { Button, H1, Image, SizableText, YStack } from "tamagui";
 
 import { MyStack } from "../components/MyStack";
 
@@ -50,11 +51,20 @@ export default function Home() {
           //responsive
           width={200}
           height={50}
-          onPress={() => router.push("/login/login")}
+          //funcion alternaria, si en el securestore hay un token, va a la pagina de tabs, sino a la de login
+          onPress={async () => {
+            const token = await SecureStore.getItemAsync("token");
+            console.log(token);
+            if (token) {
+              router.push("/tabs");
+            } else {
+              router.push("/login/login");
+            }
+          }}
         >
           Vamos!
         </Button>
-        <Button onPress={() => router.push("/tabs")}>Go to tabs page</Button>
+        {/*<Button onPress={() => router.push("/tabs")}>Go to tabs page</Button>*/}
       </YStack>
     </MyStack>
   );

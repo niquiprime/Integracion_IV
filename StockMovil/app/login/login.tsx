@@ -3,6 +3,8 @@ import { useRouter } from "expo-router";
 import { Button, Form, H2, Input, Label, Text, XStack, YStack } from "tamagui";
 import * as Yup from "yup";
 
+import { login } from "../../controllers/apiController";
+
 const logintest = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -32,9 +34,11 @@ const logintest = () => {
   const handleSubmit = async () => {
     try {
       await validationSchema.validate(formData, { abortEarly: false });
-      console.log("Datos de inicio de sesión:", formData);
+      const { email, password } = formData;
+      await login(email, password);
       router.push("/tabs");
     } catch (err) {
+      console.log(err);
       const newErrors = {
         email: "",
         password: ""

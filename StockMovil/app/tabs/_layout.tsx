@@ -1,6 +1,4 @@
-import { ScanBarcode } from "@tamagui/lucide-icons";
-import { User2 } from "@tamagui/lucide-icons";
-import { Files } from "@tamagui/lucide-icons";
+import { Files, ScanBarcode, User2 } from "@tamagui/lucide-icons";
 import { Tabs } from "expo-router";
 
 export default function TabRoutesLayout() {

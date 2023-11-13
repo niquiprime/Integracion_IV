@@ -14,6 +14,8 @@ import {
   YStack
 } from "tamagui";
 
+import { obtenerTodosLosProductos } from "../../controllers/apiController";
+
 interface Product {
   Nombre: string;
   Precio: number;
@@ -31,11 +33,8 @@ const SearchProduct: React.FC = () => {
   const fetchProductData = async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-        "https://stockmovil-back.onrender.com/api/productos/todos"
-      );
-      const data: Product[] = await response.json();
-
+      const data = await obtenerTodosLosProductos();
+      console.log(data);
       setProducts(data);
     } catch (error) {
       console.error(error);

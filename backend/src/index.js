@@ -27,10 +27,14 @@ app.get('/', (req, res) => {
 // Routes: quiero agregar /api/products y /api/users
 const productsRouter = require('./Routes/products');
 const usersRouter = require('./Routes/users');
+const loginRegisterRouter = require('./Routes/login-register');
 const validateJWT = require('./Routes/validate-Jwt');
 
-app.use('/api/producto',validateJWT, productsRouter);
-app.use('/api/usuario', usersRouter);
+//app.use('/api/producto',validateJWT, productsRouter);
+app.use('/api', loginRegisterRouter);
+app.use('/api/producto', validateJWT, productsRouter);
+app.use('/api/usuario', validateJWT, usersRouter);
+
 
 // CORS
 app.use(cors());

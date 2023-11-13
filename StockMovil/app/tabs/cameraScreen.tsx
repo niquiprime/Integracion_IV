@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { X } from "@tamagui/lucide-icons";
-import Axios from "axios";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   Adapt,
   Button,
@@ -14,6 +14,9 @@ import {
   YGroup,
   YStack
 } from "tamagui";
+
+import { buscarProductoPorCodigoDeBarras } from "../../controllers/apiController";
+
 export default function App() {
   interface Product {
     Nombre: string;
@@ -29,6 +32,7 @@ export default function App() {
   const [products, setProducts] = useState<Product>(null);
   const [shouldScan, setShouldScan] = useState(false);
 
+  /*
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -36,6 +40,18 @@ export default function App() {
     };
     getBarCodeScannerPermissions();
   }, []);
+*/
+  useFocusEffect(
+    React.useCallback(() => {
+      setShouldScan(false);
+      console.log("useFocusEffect");
+      const getBarCodeScannerPermissions = async () => {
+        const { status } = await BarCodeScanner.requestPermissionsAsync();
+        setHasPermission(status === "granted");
+      };
+      getBarCodeScannerPermissions();
+    }, [])
+  );
 
   async function handleBarCodeScanned2({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -45,14 +61,10 @@ export default function App() {
     type: string;
     data: string;
   }) {
-    console.log("shouldScan: ", shouldScan);
+    console.log("shouldScan " + shouldScan);
     if (shouldScan) {
       try {
-        const response = await Axios.get(
-          `https://stockmovil-back.onrender.com/api/productos/codigo/${data}`
-        );
-        const productData: Product = response.data;
-        console.log(productData);
+        const productData = await buscarProductoPorCodigoDeBarras(data);
 
         if (productData) {
           setProducts(productData);
@@ -71,7 +83,6 @@ export default function App() {
   }
 
   const startScanning = () => {
-    console.log("1: " + shouldScan);
     // Activa el escaneo
     setShouldScan(true);
   };
@@ -113,6 +124,7 @@ export default function App() {
           >
             <Sheet
               zIndex={200000}
+              snapPointsMode="fit"
               modal
               dismissOnSnapToBottom
             >
