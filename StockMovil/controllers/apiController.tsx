@@ -61,6 +61,7 @@ async function save(token: string) {
 }
 
 export const login = async (email: string, password: string) => {
+  console.log(loginUrl);
   const options = {
     method: "POST",
     headers: { "content-type": "application/json" },
