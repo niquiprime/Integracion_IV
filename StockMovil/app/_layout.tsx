@@ -34,7 +34,7 @@ export default function Layout() {
     <TamaguiProvider config={config}>
       <Suspense fallback={<Text>Cargando...</Text>}>
         {/* Si es darkmode usar tema "dark_blue" */}
-        <Theme name={colorScheme === "light" ? "light_green" : "dark_green"}>
+        <Theme name={colorScheme === "light" ? "light_blue" : "dark_blue"}>
           <ThemeProvider
             value={colorScheme === "light" ? DefaultTheme : DarkTheme}
           >
